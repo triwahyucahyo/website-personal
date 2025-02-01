@@ -1,7 +1,7 @@
 <?php
 require '../../app/config.php';
 include_once '../../template/header.php';
-$page = 'materi';
+$page = 'ruangan';
 include_once '../../template/sidebar.php';
 ?>
 
@@ -13,7 +13,7 @@ include_once '../../template/sidebar.php';
         <div class="container-fluid">
             <div class="row">
                 <div class="col-sm-6">
-                    <h4 class="m-0 text-dark"><i class="fa fa-list ml-1 mr-1"></i> Tambah Data Materi</h4>
+                    <h4 class="m-0 text-dark"><i class="fa fa-person-booth ml-1 mr-1"></i> Tambah Data Ruangan</h4>
                 </div><!-- /.col -->
                 <div class="col-sm-6 float-right">
                     <a href="#" onClick="history.go(-1);" class="btn btn-xs bg-dark float-right"><i class="fa fa-arrow-left"> Kembali</i></a>
@@ -36,9 +36,9 @@ include_once '../../template/sidebar.php';
                         <div class="card-body" style="background-color: white;">
                             <form class="form-horizontal" method="POST" action="" enctype="multipart/form-data">
                                 <div class="form-group row">
-                                    <label class="col-sm-2 col-form-label">Nama Materi</label>
+                                    <label class="col-sm-2 col-form-label">Nama Ruangan</label>
                                     <div class="col-sm-10">
-                                        <input type="text" class="form-control" name="nm_materi" required>
+                                        <input type="text" class="form-control" name="nm_ruangan" required>
                                     </div>
                                 </div>
                                 <div class="form-group row">
@@ -66,11 +66,11 @@ include_once '../../template/footer.php';
 
 <?php
 if (isset($_POST['submit'])) {
-    $nm_materi = $_POST['nm_materi'];
+    $nm_ruangan = $_POST['nm_ruangan'];
 
-    $tambah = $con->query("INSERT INTO materi VALUES (
+    $tambah = $con->query("INSERT INTO ruangan VALUES (
         default, 
-        '$nm_materi'
+        '$nm_ruangan'
     )");
 
     if ($tambah) {
