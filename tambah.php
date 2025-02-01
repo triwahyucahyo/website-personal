@@ -1,9 +1,8 @@
 <?php
 require '../../app/config.php';
 include_once '../../template/header.php';
-$page = 'diklat';
+$page = 'instansi';
 include_once '../../template/sidebar.php';
-
 ?>
 
 
@@ -14,7 +13,7 @@ include_once '../../template/sidebar.php';
         <div class="container-fluid">
             <div class="row">
                 <div class="col-sm-6">
-                    <h4 class="m-0 text-dark"><i class="fa fa-calendar-week ml-1 mr-1"></i> Tambah Data Diklat</h4>
+                    <h4 class="m-0 text-dark"><i class="fa fa-building ml-1 mr-1"></i> Tambah Data Instansi</h4>
                 </div><!-- /.col -->
                 <div class="col-sm-6 float-right">
                     <a href="#" onClick="history.go(-1);" class="btn btn-xs bg-dark float-right"><i class="fa fa-arrow-left"> Kembali</i></a>
@@ -37,66 +36,29 @@ include_once '../../template/sidebar.php';
                         <div class="card-body" style="background-color: white;">
                             <form class="form-horizontal" method="POST" action="" enctype="multipart/form-data">
                                 <div class="form-group row">
-                                    <label class="col-sm-2 col-form-label">Tema Diklat</label>
+                                    <label class="col-sm-2 col-form-label">Nama Instansi</label>
                                     <div class="col-sm-10">
-                                        <input type="text" class="form-control" name="tema" required>
+                                        <input type="text" class="form-control" name="nm_instansi" required>
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label class="col-sm-2 col-form-label">Materi</label>
+                                    <label class="col-sm-2 col-form-label">Alamat</label>
                                     <div class="col-sm-10">
-                                        <select name="id_materi" class="form-control select2" style="width: 100%;">
-                                            <option value="">-- Pilih --</option>
-                                            <?php $data = $con->query("SELECT * FROM materi ORDER BY id_materi DESC"); ?>
-                                            <?php foreach ($data as $row) : ?>
-                                                <option value="<?= $row['id_materi'] ?>"><?= $row['nm_materi'] ?></option>
-                                            <?php endforeach ?>
-                                        </select>
+                                        <textarea name="alamat" class="form-control" required></textarea>
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label class="col-sm-2 col-form-label">Nama Tutor</label>
+                                    <label class="col-sm-2 col-form-label">HP</label>
                                     <div class="col-sm-10">
-                                        <select name="id_tutor" class="form-control select2" style="width: 100%;">
-                                            <option value="">-- Pilih --</option>
-                                            <?php $data = $con->query("SELECT * FROM tutor ORDER BY id_tutor DESC"); ?>
-                                            <?php foreach ($data as $row) : ?>
-                                                <option value="<?= $row['id_tutor'] ?>"><?= $row['nm_tutor'] ?></option>
-                                            <?php endforeach ?>
-                                        </select>
+                                        <input type="number" class="form-control" name="hp_instansi" required>
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label class="col-sm-2 col-form-label">Tanggal Mulai</label>
+                                    <label class="col-sm-2 col-form-label">Email</label>
                                     <div class="col-sm-10">
-                                        <input type="date" class="form-control" name="tgl_mulai" required>
+                                        <input type="email" class="form-control" name="email_instansi" required>
                                     </div>
                                 </div>
-                                <div class="form-group row">
-                                    <label class="col-sm-2 col-form-label">Tanggal Selesai</label>
-                                    <div class="col-sm-10">
-                                        <input type="date" class="form-control" name="tgl_selesai" required>
-                                    </div>
-                                </div>
-                                <div class="form-group row">
-                                    <label class="col-sm-2 col-form-label">Jam Mulai</label>
-                                    <div class="col-sm-10">
-                                        <input type="time" class="form-control" name="jam_mulai" required>
-                                    </div>
-                                </div>
-                                <div class="form-group row">
-                                    <label class="col-sm-2 col-form-label">Nama Ruangan</label>
-                                    <div class="col-sm-10">
-                                        <select name="id_ruangan" class="form-control select2" style="width: 100%;">
-                                            <option value="">-- Pilih --</option>
-                                            <?php $data = $con->query("SELECT * FROM ruangan ORDER BY id_ruangan DESC"); ?>
-                                            <?php foreach ($data as $row) : ?>
-                                                <option value="<?= $row['id_ruangan'] ?>"><?= $row['nm_ruangan'] ?></option>
-                                            <?php endforeach ?>
-                                        </select>
-                                    </div>
-                                </div>
-
                                 <div class="form-group row">
                                     <div class="col-sm-12">
                                         <button type="submit" name="submit" class="btn btn-sm bg-cyan float-right"><i class="fa fa-save"> Simpan</i></button>
@@ -122,24 +84,17 @@ include_once '../../template/footer.php';
 
 <?php
 if (isset($_POST['submit'])) {
-    $tema = $_POST['tema'];
-    $id_materi = $_POST['id_materi'];
-    $id_tutor = $_POST['id_tutor'];
-    $tgl_mulai = $_POST['tgl_mulai'];
-    $tgl_selesai = $_POST['tgl_selesai'];
-    $jam_mulai = $_POST['jam_mulai'];
-    $id_ruangan = $_POST['id_ruangan'];
+    $nm_instansi = $_POST['nm_instansi'];
+    $alamat = $_POST['alamat'];
+    $hp_instansi = $_POST['hp_instansi'];
+    $email_instansi = $_POST['email_instansi'];
 
-    $tambah = $con->query("INSERT INTO diklat VALUES (
+    $tambah = $con->query("INSERT INTO instansi VALUES (
         default, 
-        '$tema', 
-        '$id_materi', 
-        '$id_tutor', 
-        '$tgl_mulai',
-        '$tgl_selesai',
-        '$jam_mulai',
-        '$id_ruangan',
-        1
+        '$nm_instansi',
+        '$alamat',
+        '$hp_instansi',
+        '$email_instansi'
     )");
 
     if ($tambah) {

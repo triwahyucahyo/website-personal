@@ -1,18 +1,12 @@
 <?php
 require '../../app/config.php';
 include_once '../../template/header.php';
-$page = 'diklat';
+$page = 'instansi';
 include_once '../../template/sidebar.php';
 
 $id = $_GET['id'];
-$query = $con->query(" SELECT * FROM diklat WHERE id_diklat ='$id'");
+$query = $con->query(" SELECT * FROM instansi WHERE id_instansi ='$id'");
 $row = $query->fetch_array();
-
-$sts = [
-    '' => '---Pilih---',
-    '1' => 'Aktif',
-    '0' => 'Non Aktif',
-];
 ?>
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
@@ -21,7 +15,7 @@ $sts = [
         <div class="container-fluid">
             <div class="row">
                 <div class="col-sm-6">
-                    <h4 class="m-0 text-dark"><i class="fa fa-calendar-week ml-1 mr-1"></i> Edit Data Diklat</h4>
+                    <h4 class="m-0 text-dark"><i class="fa fa-building ml-1 mr-1"></i> Edit Data Instansi</h4>
                 </div><!-- /.col -->
                 <div class="col-sm-6 float-right">
                     <a href="#" onClick="history.go(-1);" class="btn btn-xs bg-dark float-right"><i class="fa fa-arrow-left"> Kembali</i></a>
@@ -44,96 +38,27 @@ $sts = [
                         <div class="card-body" style="background-color: white;">
                             <form class="form-horizontal" method="POST" action="" enctype="multipart/form-data">
                                 <div class="form-group row">
-                                    <label class="col-sm-2 col-form-label">Tema Diklat</label>
+                                    <label class="col-sm-2 col-form-label">Nama Instansi</label>
                                     <div class="col-sm-10">
-                                        <input type="text" class="form-control" name="tema" value="<?= $row['tema'] ?>" required>
+                                        <input type="text" class="form-control" name="nm_instansi" value="<?= $row['nm_instansi'] ?>" required>
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label class="col-sm-2 col-form-label">Materi</label>
+                                    <label class="col-sm-2 col-form-label">Alamat</label>
                                     <div class="col-sm-10">
-                                        <select name="id_materi" class="form-control select2" style="width: 100%;">
-                                            <?php
-                                            $q = $con->query("SELECT * FROM materi ORDER BY id_materi DESC");
-                                            while ($d = $q->fetch_array()) {
-                                                if ($d['id_materi'] == $row['id_materi']) {
-                                            ?>
-                                                    <option value="<?= $d['id_materi']; ?>" selected="<?= $d['id_materi']; ?>"><?= $d['nm_materi'] ?></option>
-                                                <?php
-                                                } else {
-                                                ?>
-                                                    <option value="<?= $d['id_materi'] ?>"><?= $d['nm_materi'] ?></option>
-                                            <?php
-                                                }
-                                            }
-                                            ?>
-                                        </select>
+                                        <textarea name="alamat" class="form-control" required><?= $row['alamat'] ?></textarea>
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label class="col-sm-2 col-form-label">Nama Tutor</label>
+                                    <label class="col-sm-2 col-form-label">HP</label>
                                     <div class="col-sm-10">
-                                        <select name="id_tutor" class="form-control select2" style="width: 100%;">
-                                            <?php
-                                            $q = $con->query("SELECT * FROM tutor ORDER BY id_tutor DESC");
-                                            while ($d = $q->fetch_array()) {
-                                                if ($d['id_tutor'] == $row['id_tutor']) {
-                                            ?>
-                                                    <option value="<?= $d['id_tutor']; ?>" selected="<?= $d['id_tutor']; ?>"><?= $d['nm_tutor'] ?></option>
-                                                <?php
-                                                } else {
-                                                ?>
-                                                    <option value="<?= $d['id_tutor'] ?>"><?= $d['nm_tutor'] ?></option>
-                                            <?php
-                                                }
-                                            }
-                                            ?>
-                                        </select>
+                                        <input type="number" class="form-control" name="hp_instansi" value="<?= $row['hp_instansi'] ?>" required>
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label class="col-sm-2 col-form-label">Tanggal Mulai</label>
+                                    <label class="col-sm-2 col-form-label">Email</label>
                                     <div class="col-sm-10">
-                                        <input type="date" class="form-control" name="tgl_mulai" value="<?= $row['tgl_mulai'] ?>" required>
-                                    </div>
-                                </div>
-                                <div class="form-group row">
-                                    <label class="col-sm-2 col-form-label">Tanggal Selesai</label>
-                                    <div class="col-sm-10">
-                                        <input type="date" class="form-control" name="tgl_selesai" value="<?= $row['tgl_selesai'] ?>" required>
-                                    </div>
-                                </div>
-                                <div class="form-group row">
-                                    <label class="col-sm-2 col-form-label">Jam Mulai</label>
-                                    <div class="col-sm-10">
-                                        <input type="time" class="form-control" name="jam_mulai" value="<?= $row['jam_mulai'] ?>" required>
-                                    </div>
-                                </div>
-                                <div class="form-group row">
-                                    <label class="col-sm-2 col-form-label">Nama Ruangan</label>
-                                    <div class="col-sm-10">
-                                        <select name="id_ruangan" class="form-control select2" style="width: 100%;">
-                                            <?php
-                                            $q = $con->query("SELECT * FROM ruangan ORDER BY id_ruangan DESC");
-                                            while ($d = $q->fetch_array()) {
-                                                if ($d['id_ruangan'] == $row['id_ruangan']) {
-                                            ?>
-                                                    <option value="<?= $d['id_ruangan']; ?>" selected="<?= $d['id_ruangan']; ?>"><?= $d['nm_ruangan'] ?></option>
-                                                <?php
-                                                } else {
-                                                ?>
-                                                    <option value="<?= $d['id_ruangan'] ?>"><?= $d['nm_ruangan'] ?></option>
-                                            <?php
-                                                }
-                                            }
-                                            ?>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="form-group row">
-                                    <label class="col-sm-2 col-form-label">Status Diklat</label>
-                                    <div class="col-sm-10">
-                                        <?= form_dropdown('sts', $sts, $row['sts'], 'class="form-control" required') ?>
+                                        <input type="email" class="form-control" name="email_instansi" value="<?= $row['email_instansi'] ?>" required>
                                     </div>
                                 </div>
                                 <div class="form-group row">
@@ -161,25 +86,17 @@ include_once '../../template/footer.php';
 
 <?php
 if (isset($_POST['submit'])) {
-    $tema = $_POST['tema'];
-    $id_materi = $_POST['id_materi'];
-    $id_tutor = $_POST['id_tutor'];
-    $tgl_mulai = $_POST['tgl_mulai'];
-    $tgl_selesai = $_POST['tgl_selesai'];
-    $jam_mulai = $_POST['jam_mulai'];
-    $id_ruangan = $_POST['id_ruangan'];
-    $sts = $_POST['sts'];
+    $nm_instansi = $_POST['nm_instansi'];
+    $alamat = $_POST['alamat'];
+    $hp_instansi = $_POST['hp_instansi'];
+    $email_instansi = $_POST['email_instansi'];
 
-    $update = $con->query("UPDATE diklat SET 
-        tema = '$tema',
-        id_materi = '$id_materi',
-        id_tutor = '$id_tutor',
-        tgl_mulai = '$tgl_mulai',
-        tgl_selesai = '$tgl_selesai',
-        jam_mulai = '$jam_mulai',
-        id_ruangan = '$id_ruangan',
-        sts = '$sts'
-        WHERE id_diklat = '$id'
+    $update = $con->query("UPDATE instansi SET  
+        nm_instansi = '$nm_instansi', 
+        alamat = '$alamat',
+        hp_instansi = '$hp_instansi', 
+        email_instansi = '$email_instansi'
+        WHERE id_instansi = '$id'
     ");
 
     if ($update) {

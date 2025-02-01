@@ -5,7 +5,8 @@ include_once '../../template/sidebar.php';
 include_once '../../template/footer.php';
 
 $id = $_GET['id'];
-$query  = $con->query("DELETE FROM diklat WHERE id_diklat = '$id'");
+
+$query = $con->query(" DELETE FROM instansi WHERE id_instansi = '$id' ");
 if ($query) {
     $_SESSION['pesan'] = "Data Berhasil di Hapus";
     echo "<meta http-equiv='refresh' content='0; url=index'>";
