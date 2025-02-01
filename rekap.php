@@ -3,40 +3,8 @@ include '../../app/config.php';
 
 $no = 1;
 
-if (isset($_POST['cetak'])) {
-
-    $tgl1 = $_POST['tgl1'];
-    $cektgl1 = isset($tgl1);
-    $tgl2 = $_POST['tgl2'];
-    $cektgl2 = isset($tgl2);
-    $id_materi = $_POST['id_materi'];
-    $cekid_materi = isset($id_materi);
-    if ($tgl1 == $cektgl1 && $tgl2 == $cektgl2 && $id_materi == null) {
-
-        $sql = mysqli_query($con, "SELECT * FROM diklat a JOIN materi b ON a.id_materi = b.id_materi JOIN tutor c ON a.id_tutor = c.id_tutor JOIN ruangan d ON a.id_ruangan = d.id_ruangan WHERE a.tgl_mulai BETWEEN '$tgl1' AND '$tgl2' ORDER BY tgl_mulai ASC");
-
-        $label = 'LAPORAN DIKLAT <br> Tanggal : ' . tgl($tgl1) . ' s/d ' . tgl($tgl2);
-    } else if ($tgl1 == null && $tgl2 == null && $id_materi == $cekid_materi) {
-        $sql = mysqli_query($con, "SELECT * FROM diklat a JOIN materi b ON a.id_materi = b.id_materi JOIN tutor c ON a.id_tutor = c.id_tutor JOIN ruangan d ON a.id_ruangan = d.id_ruangan WHERE a.id_materi = '$id_materi' ORDER BY tgl_mulai DESC");
-        $dt = $con->query("SELECT * FROM materi WHERE id_materi = '$id_materi'")->fetch_array();
-        $label = 'LAPORAN DIKLAT <br> Materi : ' . $dt['nm_materi'];
-    } else if ($tgl1 == $cektgl1 && $tgl2 == $cektgl2 && $id_materi == $cekid_materi) {
-        $sql = mysqli_query($con, "SELECT * FROM diklat a JOIN materi b ON a.id_materi = b.id_materi JOIN tutor c ON a.id_tutor = c.id_tutor JOIN ruangan d ON a.id_ruangan = d.id_ruangan WHERE a.tgl_mulai BETWEEN '$tgl1' AND '$tgl2' AND a.id_materi = '$id_materi' ORDER BY tgl_mulai ASC");
-        $dt = $con->query("SELECT * FROM materi WHERE id_materi = '$id_materi'")->fetch_array();
-        $label = 'LAPORAN DIKLAT <br> Tanggal : ' . tgl($tgl1) . ' s/d ' . tgl($tgl2) . '<br> Materi : ' . $dt['nm_materi'];
-    } else if ($tgl1 == null && $tgl2 == null && $id_materi == null) {
-        $sql = mysqli_query($con, "SELECT * FROM diklat a JOIN materi b ON a.id_materi = b.id_materi JOIN tutor c ON a.id_tutor = c.id_tutor JOIN ruangan d ON a.id_ruangan = d.id_ruangan ORDER BY tgl_mulai DESC");
-        $label = 'LAPORAN DIKLAT';
-    }
-} else if (isset($_POST['cetak2'])) {
-    $tahun = $_POST['tahun'];
-    $cektahun = isset($tahun);
-
-    if ($tahun == $cektahun) {
-        $sql = mysqli_query($con, "SELECT * FROM diklat a JOIN materi b ON a.id_materi = b.id_materi JOIN tutor c ON a.id_tutor = c.id_tutor JOIN ruangan d ON a.id_ruangan = d.id_ruangan WHERE YEAR(a.tgl_mulai) = '$tahun' ORDER BY tgl_mulai ASC");
-        $label = 'LAPORAN DIKLAT <br> Tahun : ' . $tahun;
-    }
-}
+$sql = mysqli_query($con, "SELECT * FROM diklat a JOIN materi b ON a.id_materi = b.id_materi JOIN tutor c ON a.id_tutor = c.id_tutor JOIN ruangan d ON a.id_ruangan = d.id_ruangan ORDER BY tgl_mulai DESC");
+$label = 'LAPORAN REKAPITULASI DIKLAT';
 
 require_once '../../assets/vendor/autoload.php';
 $mpdf = new \Mpdf\Mpdf(['mode' => 'utf-8', 'format' => 'LEGAL-L']);
@@ -51,7 +19,7 @@ ob_start();
 <html>
 
 <head>
-    <title>Laporan Diklat</title>
+    <title>Laporan Rekapitulasi Diklat</title>
 </head>
 
 <style>
@@ -90,12 +58,15 @@ ob_start();
                     <thead>
                         <tr bgcolor="#007BFF" align="center">
                             <th>No</th>
-                            <th>Tema</th>
+                            <th>Tema Diklat</th>
                             <th>Materi</th>
                             <th>Tutor</th>
                             <th>Tanggal</th>
-                            <th>Jam Mulai</th>
                             <th>Ruangan</th>
+                            <th>Peserta Terdaftar</th>
+                            <th>Peserta Hadir</th>
+                            <th>Sertifikat</th>
+                            <th>Penghargaan</th>
                         </tr>
                     </thead>
 
@@ -114,8 +85,31 @@ ob_start();
                                     <?php } ?>
                                     <br>
                                 </td>
-                                <td align="center"><?= $data['jam_mulai'] ?></td>
                                 <td align="center"><?= $data['nm_ruangan'] ?></td>
+                                <td align="center">
+                                    <?php
+                                    $ttl = $con->query("SELECT COUNT(*) AS total FROM pendaftaran WHERE id_diklat = '$data[id_diklat]'")->fetch_array();
+                                    echo $ttl['total'] . ' Orang';
+                                    ?>
+                                </td>
+                                <td align="center">
+                                    <?php
+                                    $ttl2 = $con->query("SELECT COUNT(*) AS total FROM kehadiran WHERE id_diklat = '$data[id_diklat]'")->fetch_array();
+                                    echo $ttl2['total'] . ' Orang';
+                                    ?>
+                                </td>
+                                <td align="center">
+                                    <?php
+                                    $ttl3 = $con->query("SELECT COUNT(*) AS total FROM sertifikat WHERE id_diklat = '$data[id_diklat]'")->fetch_array();
+                                    echo $ttl3['total'] . ' Orang';
+                                    ?>
+                                </td>
+                                <td align="center">
+                                    <?php
+                                    $ttl4 = $con->query("SELECT COUNT(*) AS total FROM award WHERE id_diklat = '$data[id_diklat]'")->fetch_array();
+                                    echo $ttl4['total'] . ' Orang';
+                                    ?>
+                                </td>
                             </tr>
                         <?php } ?>
                     </tbody>

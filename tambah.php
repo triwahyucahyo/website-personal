@@ -1,7 +1,7 @@
 <?php
 require '../../app/config.php';
 include_once '../../template/header.php';
-$page = 'award';
+$page = 'diklat';
 include_once '../../template/sidebar.php';
 
 ?>
@@ -14,7 +14,7 @@ include_once '../../template/sidebar.php';
         <div class="container-fluid">
             <div class="row">
                 <div class="col-sm-6">
-                    <h4 class="m-0 text-dark"><i class="fa fa-calendar-week ml-1 mr-1"></i> Tambah Data Penghargaan</h4>
+                    <h4 class="m-0 text-dark"><i class="fa fa-calendar-week ml-1 mr-1"></i> Tambah Data Diklat</h4>
                 </div><!-- /.col -->
                 <div class="col-sm-6 float-right">
                     <a href="#" onClick="history.go(-1);" class="btn btn-xs bg-dark float-right"><i class="fa fa-arrow-left"> Kembali</i></a>
@@ -34,43 +34,69 @@ include_once '../../template/sidebar.php';
                     <div class="card card-purple card-outline">
                         <!-- /.card-header -->
                         <!-- form start -->
-                        <?php if (isset($_SESSION['gagal']) && $_SESSION['gagal'] <> '') { ?>
-                            <div id="notif" class="alert bg-danger" role="alert"><i class="fa fa-check-circle mr-2"></i><b><?= $_SESSION['gagal'] ?></b></div>
-                        <?php $_SESSION['gagal'] = '';
-                        } ?>
                         <div class="card-body" style="background-color: white;">
                             <form class="form-horizontal" method="POST" action="" enctype="multipart/form-data">
                                 <div class="form-group row">
-                                    <label class="col-sm-2 col-form-label">Diklat</label>
+                                    <label class="col-sm-2 col-form-label">Tema Diklat</label>
                                     <div class="col-sm-10">
-                                        <select name="id_diklat" id="id_diklat" class="form-control select2" style="width: 100%;">
+                                        <input type="text" class="form-control" name="tema" required>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-2 col-form-label">Materi</label>
+                                    <div class="col-sm-10">
+                                        <select name="id_materi" class="form-control select2" style="width: 100%;">
                                             <option value="">-- Pilih --</option>
-                                            <?php $data = $con->query("SELECT * FROM diklat WHERE sts = 1 ORDER BY id_diklat DESC"); ?>
+                                            <?php $data = $con->query("SELECT * FROM materi ORDER BY id_materi DESC"); ?>
                                             <?php foreach ($data as $row) : ?>
-                                                <option value="<?= $row['id_diklat'] ?>"><?= $row['tema'] ?></option>
+                                                <option value="<?= $row['id_materi'] ?>"><?= $row['nm_materi'] ?></option>
                                             <?php endforeach ?>
                                         </select>
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label class="col-sm-2 col-form-label">Nama Peserta</label>
+                                    <label class="col-sm-2 col-form-label">Nama Tutor</label>
                                     <div class="col-sm-10">
-                                        <select class="form-control select2" style="width: 100%;" name="id_peserta" id="id_peserta" required>
+                                        <select name="id_tutor" class="form-control select2" style="width: 100%;">
+                                            <option value="">-- Pilih --</option>
+                                            <?php $data = $con->query("SELECT * FROM tutor ORDER BY id_tutor DESC"); ?>
+                                            <?php foreach ($data as $row) : ?>
+                                                <option value="<?= $row['id_tutor'] ?>"><?= $row['nm_tutor'] ?></option>
+                                            <?php endforeach ?>
                                         </select>
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label class="col-sm-2 col-form-label">Nama Penghargaan</label>
+                                    <label class="col-sm-2 col-form-label">Tanggal Mulai</label>
                                     <div class="col-sm-10">
-                                        <input type="text" class="form-control" name="nm_award" required>
+                                        <input type="date" class="form-control" name="tgl_mulai" required>
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label class="col-sm-2 col-form-label">Link Penghargaan</label>
+                                    <label class="col-sm-2 col-form-label">Tanggal Selesai</label>
                                     <div class="col-sm-10">
-                                        <input type="text" class="form-control" name="link" required>
+                                        <input type="date" class="form-control" name="tgl_selesai" required>
                                     </div>
                                 </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-2 col-form-label">Jam Mulai</label>
+                                    <div class="col-sm-10">
+                                        <input type="time" class="form-control" name="jam_mulai" required>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-2 col-form-label">Nama Ruangan</label>
+                                    <div class="col-sm-10">
+                                        <select name="id_ruangan" class="form-control select2" style="width: 100%;">
+                                            <option value="">-- Pilih --</option>
+                                            <?php $data = $con->query("SELECT * FROM ruangan ORDER BY id_ruangan DESC"); ?>
+                                            <?php foreach ($data as $row) : ?>
+                                                <option value="<?= $row['id_ruangan'] ?>"><?= $row['nm_ruangan'] ?></option>
+                                            <?php endforeach ?>
+                                        </select>
+                                    </div>
+                                </div>
+
                                 <div class="form-group row">
                                     <div class="col-sm-12">
                                         <button type="submit" name="submit" class="btn btn-sm bg-cyan float-right"><i class="fa fa-save"> Simpan</i></button>
@@ -94,57 +120,34 @@ include_once '../../template/sidebar.php';
 include_once '../../template/footer.php';
 ?>
 
-<script>
-    $("#id_diklat").change(function() {
-
-        var id_diklat = $("#id_diklat").val();
-
-        $.ajax({
-            type: "POST",
-            dataType: "html",
-            url: "ajax.php?jenis=diklat",
-            data: "diklat=" + id_diklat,
-            success: function(msg) {
-
-                if (msg == '') {
-                    alert('Tidak ada data');
-                } else {
-                    $("#id_peserta").html(msg);
-                }
-
-            }
-        });
-    });
-</script>
-
 <?php
 if (isset($_POST['submit'])) {
-    $id_diklat = $_POST['id_diklat'];
-    $id_peserta = $_POST['id_peserta'];
-    $nm_award = $_POST['nm_award'];
-    $link = $_POST['link'];
+    $tema = $_POST['tema'];
+    $id_materi = $_POST['id_materi'];
+    $id_tutor = $_POST['id_tutor'];
+    $tgl_mulai = $_POST['tgl_mulai'];
+    $tgl_selesai = $_POST['tgl_selesai'];
+    $jam_mulai = $_POST['jam_mulai'];
+    $id_ruangan = $_POST['id_ruangan'];
 
-    $query = $con->query("SELECT id_peserta, id_diklat FROM award WHERE id_peserta = '$id_peserta' AND id_diklat = '$id_diklat' ");
+    $tambah = $con->query("INSERT INTO diklat VALUES (
+        default, 
+        '$tema', 
+        '$id_materi', 
+        '$id_tutor', 
+        '$tgl_mulai',
+        '$tgl_selesai',
+        '$jam_mulai',
+        '$id_ruangan',
+        1
+    )");
 
-    if ($query->num_rows > 0) {
-        $_SESSION['gagal'] = "Peserta Sudah mendapatkan Penghargaan";
-        echo "<meta http-equiv='refresh' content='0; url=tambah'>";
+    if ($tambah) {
+        $_SESSION['pesan'] = "Data Berhasil di Simpan";
+        echo "<meta http-equiv='refresh' content='0; url=index'>";
     } else {
-        $tambah = $con->query("INSERT INTO award VALUES (
-            default, 
-            '$id_diklat', 
-            '$id_peserta', 
-            '$nm_award', 
-            '$link'
-        )");
-
-        if ($tambah) {
-            $_SESSION['pesan'] = "Data Berhasil di Simpan";
-            echo "<meta http-equiv='refresh' content='0; url=index'>";
-        } else {
-            echo "Data anda gagal disimpan. Ulangi sekali lagi";
-            echo "<meta http-equiv='refresh' content='0; url=tambah'>";
-        }
+        echo "Data anda gagal disimpan. Ulangi sekali lagi";
+        echo "<meta http-equiv='refresh' content='0; url=tambah'>";
     }
 }
 
