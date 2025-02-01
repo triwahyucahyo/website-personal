@@ -1,7 +1,7 @@
 <?php
 require '../../app/config.php';
 include_once '../../template/header.php';
-$page = 'ruangan';
+$page = 'user';
 include_once '../../template/sidebar.php';
 ?>
 
@@ -13,7 +13,7 @@ include_once '../../template/sidebar.php';
         <div class="container-fluid">
             <div class="row">
                 <div class="col-sm-6">
-                    <h4 class="m-0 text-dark"><i class="fa fa-person-booth ml-1 mr-1"></i> Data Ruangan</h4>
+                    <h4 class="m-0 text-dark"><i class="fa fa-user ml-1 mr-1"></i> Data Pengguna</h4>
                 </div><!-- /.col -->
                 <div class="col-sm-6 text-right">
                     <a href="tambah" class="btn btn-sm bg-dark"><i class="fa fa-plus-circle"> Tambah Data</i></a>
@@ -43,7 +43,9 @@ include_once '../../template/sidebar.php';
                                     <thead class="bg-purple">
                                         <tr align="center">
                                             <th>No</th>
-                                            <th>Nama Ruangan</th>
+                                            <th>Nama Pengguna</th>
+                                            <th>Username</th>
+                                            <th>Level</th>
                                             <th>Aksi</th>
                                         </tr>
                                     </thead>
@@ -51,15 +53,29 @@ include_once '../../template/sidebar.php';
                                     <tbody>
                                         <?php
                                         $no = 1;
-                                        $data = $con->query("SELECT * FROM ruangan ORDER BY id_ruangan DESC");
+                                        $data = $con->query("SELECT * FROM user ORDER BY id_user DESC");
                                         while ($row = $data->fetch_array()) {
                                         ?>
                                             <tr>
                                                 <td align="center" width="5%"><?= $no++ ?></td>
-                                                <td><?= $row['nm_ruangan'] ?></td>
+                                                <td><?= $row['nm_user'] ?></td>
+                                                <td><?= $row['username'] ?></td>
+                                                <td align="center">
+                                                    <?php
+                                                    if ($row['level'] == 1) {
+                                                        echo 'Admin';
+                                                    } else if ($row['level'] == 2) {
+                                                        echo 'Kepala Balai';
+                                                    } else {
+                                                        echo 'Peserta Diklat';
+                                                    }
+                                                    ?>
+                                                </td>
                                                 <td align="center" width="18%">
                                                     <a href="edit?id=<?= $row[0] ?>" class="btn btn-info btn-xs" title="Edit"><i class="fa fa-edit"></i> Edit</a>
-                                                    <a href="hapus?id=<?= $row[0] ?>" class="btn btn-danger btn-xs alert-hapus" title="Hapus"><i class="fa fa-trash"></i> Hapus</a>
+                                                    <?php if ($row['level'] == 1 || $row['level'] == 2) { ?>
+                                                        <a href="hapus?id=<?= $row[0] ?>" class="btn btn-danger btn-xs alert-hapus" title="Hapus"><i class="fa fa-trash"></i> Hapus</a>
+                                                    <?php } ?>
                                                 </td>
                                             </tr>
                                         <?php } ?>
