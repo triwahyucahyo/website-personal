@@ -6,7 +6,7 @@ include_once '../../template/footer.php';
 
 $id = $_GET['id'];
 
-$query = $con->query(" DELETE FROM instansi WHERE id_instansi = '$id' ");
+$query = $con->query(" DELETE FROM materi WHERE id_materi = '$id' ");
 if ($query) {
     $_SESSION['pesan'] = "Data Berhasil di Hapus";
     echo "<meta http-equiv='refresh' content='0; url=index'>";

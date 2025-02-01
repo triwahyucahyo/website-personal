@@ -1,7 +1,7 @@
 <?php
 require '../../app/config.php';
 include_once '../../template/header.php';
-$page = 'kehadiran';
+$page = 'materi';
 include_once '../../template/sidebar.php';
 ?>
 
@@ -13,10 +13,10 @@ include_once '../../template/sidebar.php';
         <div class="container-fluid">
             <div class="row">
                 <div class="col-sm-6">
-                    <h4 class="m-0 text-dark"><i class="fa fa-user-check ml-1 mr-1"></i> Data Kehadiran Diklat</h4>
+                    <h4 class="m-0 text-dark"><i class="fa fa-list ml-1 mr-1"></i> Data Materi</h4>
                 </div><!-- /.col -->
                 <div class="col-sm-6 text-right">
-                    <!-- <a href="tambah" class="btn btn-sm bg-dark"><i class="fa fa-plus-circle"> Tambah Data</i></a> -->
+                    <a href="tambah" class="btn btn-sm bg-dark"><i class="fa fa-plus-circle"> Tambah Data</i></a>
                 </div><!-- /.col -->
             </div><!-- /.row -->
         </div><!-- /.container-fluid -->
@@ -43,9 +43,7 @@ include_once '../../template/sidebar.php';
                                     <thead class="bg-purple">
                                         <tr align="center">
                                             <th>No</th>
-                                            <th>Tema Diklat</th>
-                                            <th>Peserta Terdaftar</th>
-                                            <th>Peserta Hadir</th>
+                                            <th>Nama Materi</th>
                                             <th>Aksi</th>
                                         </tr>
                                     </thead>
@@ -53,26 +51,15 @@ include_once '../../template/sidebar.php';
                                     <tbody>
                                         <?php
                                         $no = 1;
-                                        $data = $con->query("SELECT * FROM diklat ORDER BY id_diklat DESC");
+                                        $data = $con->query("SELECT * FROM materi ORDER BY id_materi DESC");
                                         while ($row = $data->fetch_array()) {
                                         ?>
                                             <tr>
                                                 <td align="center" width="5%"><?= $no++ ?></td>
-                                                <td><?= $row['tema'] ?></td>
-                                                <td align="center">
-                                                    <?php
-                                                    $ttl = $con->query("SELECT COUNT(*) AS total FROM pendaftaran WHERE id_diklat = '$row[id_diklat]'")->fetch_array();
-                                                    echo $ttl['total'] . ' Orang';
-                                                    ?>
-                                                </td>
-                                                <td align="center">
-                                                    <?php
-                                                    $ttl2 = $con->query("SELECT COUNT(*) AS total FROM kehadiran WHERE id_diklat = '$row[id_diklat]'")->fetch_array();
-                                                    echo $ttl2['total'] . ' Orang';
-                                                    ?>
-                                                </td>
-                                                <td align="center" width="15%">
-                                                    <a href="absensi?id=<?= $row[0] ?>" class="btn bg-primary btn-xs" title="Absensi"><i class="fa fa-plus-circle mr-1"></i> Data Kehadiran</a>
+                                                <td><?= $row['nm_materi'] ?></td>
+                                                <td align="center" width="18%">
+                                                    <a href="edit?id=<?= $row[0] ?>" class="btn btn-info btn-xs" title="Edit"><i class="fa fa-edit"></i> Edit</a>
+                                                    <a href="hapus?id=<?= $row[0] ?>" class="btn btn-danger btn-xs alert-hapus" title="Hapus"><i class="fa fa-trash"></i> Hapus</a>
                                                 </td>
                                             </tr>
                                         <?php } ?>
@@ -92,7 +79,6 @@ include_once '../../template/sidebar.php';
     <!-- /.content -->
 </div>
 <!-- /.content-wrapper -->
-
 
 <?php
 include_once '../../template/footer.php';

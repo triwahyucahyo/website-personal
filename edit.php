@@ -1,11 +1,11 @@
 <?php
 require '../../app/config.php';
 include_once '../../template/header.php';
-$page = 'instansi';
+$page = 'materi';
 include_once '../../template/sidebar.php';
 
 $id = $_GET['id'];
-$query = $con->query(" SELECT * FROM instansi WHERE id_instansi ='$id'");
+$query = $con->query(" SELECT * FROM materi WHERE id_materi ='$id'");
 $row = $query->fetch_array();
 ?>
 <!-- Content Wrapper. Contains page content -->
@@ -15,7 +15,7 @@ $row = $query->fetch_array();
         <div class="container-fluid">
             <div class="row">
                 <div class="col-sm-6">
-                    <h4 class="m-0 text-dark"><i class="fa fa-building ml-1 mr-1"></i> Edit Data Instansi</h4>
+                    <h4 class="m-0 text-dark"><i class="fa fa-list ml-1 mr-1"></i> Edit Data Materi</h4>
                 </div><!-- /.col -->
                 <div class="col-sm-6 float-right">
                     <a href="#" onClick="history.go(-1);" class="btn btn-xs bg-dark float-right"><i class="fa fa-arrow-left"> Kembali</i></a>
@@ -38,27 +38,9 @@ $row = $query->fetch_array();
                         <div class="card-body" style="background-color: white;">
                             <form class="form-horizontal" method="POST" action="" enctype="multipart/form-data">
                                 <div class="form-group row">
-                                    <label class="col-sm-2 col-form-label">Nama Instansi</label>
+                                    <label class="col-sm-2 col-form-label">Nama Materi</label>
                                     <div class="col-sm-10">
-                                        <input type="text" class="form-control" name="nm_instansi" value="<?= $row['nm_instansi'] ?>" required>
-                                    </div>
-                                </div>
-                                <div class="form-group row">
-                                    <label class="col-sm-2 col-form-label">Alamat</label>
-                                    <div class="col-sm-10">
-                                        <textarea name="alamat" class="form-control" required><?= $row['alamat'] ?></textarea>
-                                    </div>
-                                </div>
-                                <div class="form-group row">
-                                    <label class="col-sm-2 col-form-label">HP</label>
-                                    <div class="col-sm-10">
-                                        <input type="number" class="form-control" name="hp_instansi" value="<?= $row['hp_instansi'] ?>" required>
-                                    </div>
-                                </div>
-                                <div class="form-group row">
-                                    <label class="col-sm-2 col-form-label">Email</label>
-                                    <div class="col-sm-10">
-                                        <input type="email" class="form-control" name="email_instansi" value="<?= $row['email_instansi'] ?>" required>
+                                        <input type="text" class="form-control" name="nm_materi" value="<?= $row['nm_materi'] ?>" required>
                                     </div>
                                 </div>
                                 <div class="form-group row">
@@ -86,17 +68,11 @@ include_once '../../template/footer.php';
 
 <?php
 if (isset($_POST['submit'])) {
-    $nm_instansi = $_POST['nm_instansi'];
-    $alamat = $_POST['alamat'];
-    $hp_instansi = $_POST['hp_instansi'];
-    $email_instansi = $_POST['email_instansi'];
+    $nm_materi = $_POST['nm_materi'];
 
-    $update = $con->query("UPDATE instansi SET  
-        nm_instansi = '$nm_instansi', 
-        alamat = '$alamat',
-        hp_instansi = '$hp_instansi', 
-        email_instansi = '$email_instansi'
-        WHERE id_instansi = '$id'
+    $update = $con->query("UPDATE materi SET  
+        nm_materi = '$nm_materi' 
+        WHERE id_materi = '$id'
     ");
 
     if ($update) {
