@@ -9,17 +9,38 @@ if (isset($_POST['cetak'])) {
 
     $id_diklat = $_POST['id_diklat'];
     $cekid_diklat = isset($id_diklat);
-    if ($id_diklat == $cekid_diklat) {
+    $id_instansi = $_POST['id_instansi'];
+    $cekid_instansi = isset($id_instansi);
+    if ($id_diklat == $cekid_diklat && $id_instansi == null) {
 
-        $sql = mysqli_query($con, "SELECT * FROM kehadiran a JOIN peserta b ON a.id_peserta = b.id_peserta WHERE a.id_diklat = '$id_diklat' ORDER BY id_kehadiran DESC ");
+        $sql = mysqli_query($con, "SELECT * FROM pendaftaran a JOIN diklat b ON a.id_diklat = b.id_diklat JOIN peserta c ON a.id_peserta = c.id_peserta JOIN instansi d ON a.id_instansi = d.id_instansi WHERE a.id_diklat = '$id_diklat' ORDER BY id_pendaftaran DESC ");
 
         $dt = $con->query("SELECT * FROM diklat WHERE id_diklat = '$id_diklat'")->fetch_array();
-        $label = 'LAPORAN KEHADIRAN PESERTA DIKLAT <br> Tema Diklat : ' . $dt['tema'];
+        $label = 'LAPORAN PESERTA DIKLAT <br> Tema Diklat : ' . $dt['tema'];
+    } else if ($id_diklat == null && $id_instansi == $cekid_instansi) {
+
+        $sql = mysqli_query($con, "SELECT * FROM pendaftaran a JOIN diklat b ON a.id_diklat = b.id_diklat JOIN peserta c ON a.id_peserta = c.id_peserta JOIN instansi d ON a.id_instansi = d.id_instansi WHERE a.id_instansi = '$id_instansi' ORDER BY id_pendaftaran DESC ");
+
+        $dt = $con->query("SELECT * FROM instansi WHERE id_instansi = '$id_instansi'")->fetch_array();
+        $label = 'LAPORAN PESERTA DIKLAT <br> Asal Instansi : ' . $dt['nm_instansi'];
+    } else if ($id_instansi == $cekid_instansi && $id_diklat == $cekid_diklat) {
+
+        $sql = mysqli_query($con, "SELECT * FROM pendaftaran a JOIN diklat b ON a.id_diklat = b.id_diklat JOIN peserta c ON a.id_peserta = c.id_peserta JOIN instansi d ON a.id_instansi = d.id_instansi WHERE a.id_instansi = '$id_instansi' AND a.id_diklat = '$id_diklat' ORDER BY id_pendaftaran DESC ");
+
+        $dt1 = $con->query("SELECT * FROM diklat WHERE id_diklat = '$id_diklat'")->fetch_array();
+        $dt2 = $con->query("SELECT * FROM instansi WHERE id_instansi = '$id_instansi'")->fetch_array();
+        $label = 'LAPORAN PESERTA DIKLAT <br> Tema Diklat : ' . $dt1['tema'] . '<br> Asal Instansi :' . $dt2['nm_instansi'];
+    } else if ($id_diklat == null && $id_instansi == null) {
+
+        $sql = mysqli_query($con, "SELECT * FROM peserta ORDER BY id_peserta DESC");
+
+        // $sql = mysqli_query($con, "SELECT * FROM pendaftaran a JOIN diklat b ON a.id_diklat = b.id_diklat JOIN peserta c ON a.id_peserta = c.id_peserta JOIN instansi d ON a.id_instansi = d.id_instansi GROUP BY a.id_peserta ORDER BY id_pendaftaran DESC");
+        $label = 'LAPORAN PESERTA DIKLAT';
     }
 }
 
 require_once '../../assets/vendor/autoload.php';
-$mpdf = new \Mpdf\Mpdf(['mode' => 'utf-8', 'format' => 'A4-L']);
+$mpdf = new \Mpdf\Mpdf(['mode' => 'utf-8', 'format' => 'LEGAL-L']);
 ob_start();
 ?>
 
@@ -31,7 +52,7 @@ ob_start();
 <html>
 
 <head>
-    <title>Laporan Kehadiran Peserta Diklat</title>
+    <title>Laporan Peserta Diklat</title>
 </head>
 
 <style>
@@ -70,10 +91,17 @@ ob_start();
                     <thead>
                         <tr bgcolor="#007BFF" align="center">
                             <th>No</th>
-                            <th>Nama Peserta</th>
+                            <th>Nama</th>
                             <th>NIP</th>
+                            <th>Tempat & Tanggal Lahir</th>
+                            <th>Jenis Kelamin</th>
+                            <th>No HP</th>
+                            <th>Email</th>
                             <th>Pendidikan</th>
-                            <th>Asal Instansi</th>
+                            <?php if ($id_diklat == $cekid_diklat || $id_instansi == $cekid_instansi) { ?>
+                                <th>Asal Instansi</th>
+                                <th>Diklat</th>
+                            <?php } ?>
                         </tr>
                     </thead>
 
@@ -83,12 +111,15 @@ ob_start();
                                 <td align="center" width="5%"><?= $no++; ?></td>
                                 <td><?= $data['nm_peserta'] ?></td>
                                 <td align="center"><?= $data['nip'] ?></td>
+                                <td><?= $data['tmpt_lahir'] . ', ' . tgl($data['tgl_lahir']) ?></td>
+                                <td align="center"><?= $data['jk'] ?></td>
+                                <td align="center"><?= $data['hp_peserta'] ?></td>
+                                <td align="center"><?= $data['email_peserta'] ?></td>
                                 <td align="center"><?= $data['pendidikan'] ?></td>
-                                <td align="center">
-                                    <?php $dt = $con->query("SELECT * FROM pendaftaran a JOIN instansi b ON a.id_instansi = b.id_instansi WHERE id_diklat = '$data[id_diklat]' AND id_peserta = '$data[id_peserta]' ")->fetch_array();
-                                    echo $dt['nm_instansi'];
-                                    ?>
-                                </td>
+                                <?php if ($id_diklat == $cekid_diklat || $id_instansi == $cekid_instansi) { ?>
+                                    <td align="center"><?= $data['nm_instansi'] ?></td>
+                                    <td><?= $data['tema'] ?></td>
+                                <?php } ?>
                             </tr>
                         <?php } ?>
                     </tbody>
@@ -111,7 +142,7 @@ ob_start();
                         <?= tgl_indo(date('Y-m-d')) ?><br>
                         Banjarmasin <br>
                         <br><br><br><br>
-                        <u>Kepala Balai</u><br>
+                        <u>Kepala Diklat</u><br>
                     </h6>
                 </td>
             </tr>
