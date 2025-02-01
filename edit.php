@@ -1,12 +1,13 @@
 <?php
 require '../../app/config.php';
 include_once '../../template/header.php';
-$page = 'materi';
+$page = 'pendaftaran';
 include_once '../../template/sidebar.php';
 
 $id = $_GET['id'];
-$query = $con->query(" SELECT * FROM materi WHERE id_materi ='$id'");
+$query = $con->query(" SELECT * FROM pendaftaran a JOIN diklat b ON a.id_diklat = b.id_diklat WHERE id_pendaftaran ='$id'");
 $row = $query->fetch_array();
+
 ?>
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
@@ -15,7 +16,7 @@ $row = $query->fetch_array();
         <div class="container-fluid">
             <div class="row">
                 <div class="col-sm-6">
-                    <h4 class="m-0 text-dark"><i class="fa fa-list ml-1 mr-1"></i> Edit Data Materi</h4>
+                    <h4 class="m-0 text-dark"><i class="fa fa-file-signature ml-1 mr-1"></i> Edit Data Pendaftaran Diklat</h4>
                 </div><!-- /.col -->
                 <div class="col-sm-6 float-right">
                     <a href="#" onClick="history.go(-1);" class="btn btn-xs bg-dark float-right"><i class="fa fa-arrow-left"> Kembali</i></a>
@@ -38,9 +39,30 @@ $row = $query->fetch_array();
                         <div class="card-body" style="background-color: white;">
                             <form class="form-horizontal" method="POST" action="" enctype="multipart/form-data">
                                 <div class="form-group row">
-                                    <label class="col-sm-2 col-form-label">Nama Materi</label>
+                                    <label class="col-sm-2 col-form-label">Tema Diklat</label>
                                     <div class="col-sm-10">
-                                        <input type="text" class="form-control" name="nm_materi" value="<?= $row['nm_materi'] ?>" required>
+                                        <input type="text" class="form-control" name="tema" value="<?= $row['tema'] ?>" readonly>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-2 col-form-label">Asal Instansi</label>
+                                    <div class="col-sm-10">
+                                        <select name="id_instansi" class="form-control select2" style="width: 100%;">
+                                            <?php
+                                            $q = $con->query("SELECT * FROM instansi ORDER BY id_instansi DESC");
+                                            while ($d = $q->fetch_array()) {
+                                                if ($d['id_instansi'] == $row['id_instansi']) {
+                                            ?>
+                                                    <option value="<?= $d['id_instansi']; ?>" selected="<?= $d['id_instansi']; ?>"><?= $d['nm_instansi'] ?></option>
+                                                <?php
+                                                } else {
+                                                ?>
+                                                    <option value="<?= $d['id_instansi'] ?>"><?= $d['nm_instansi'] ?></option>
+                                            <?php
+                                                }
+                                            }
+                                            ?>
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="form-group row">
@@ -68,11 +90,11 @@ include_once '../../template/footer.php';
 
 <?php
 if (isset($_POST['submit'])) {
-    $nm_materi = $_POST['nm_materi'];
+    $id_instansi = $_POST['id_instansi'];
 
-    $update = $con->query("UPDATE materi SET  
-        nm_materi = '$nm_materi' 
-        WHERE id_materi = '$id'
+    $update = $con->query("UPDATE pendaftaran SET 
+        id_instansi = '$id_instansi'
+        WHERE id_pendaftaran = '$id'
     ");
 
     if ($update) {

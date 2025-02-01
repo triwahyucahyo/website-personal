@@ -5,8 +5,7 @@ include_once '../../template/sidebar.php';
 include_once '../../template/footer.php';
 
 $id = $_GET['id'];
-
-$query = $con->query(" DELETE FROM materi WHERE id_materi = '$id' ");
+$query  = $con->query("DELETE FROM pendaftaran WHERE id_pendaftaran = '$id'");
 if ($query) {
     $_SESSION['pesan'] = "Data Berhasil di Hapus";
     echo "<meta http-equiv='refresh' content='0; url=index'>";
